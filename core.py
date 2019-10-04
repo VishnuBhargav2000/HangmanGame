@@ -4,17 +4,11 @@ win = pygame.display.set_mode((750, 500))
 pygame.display.set_caption("Hangman Game")
 
 
-def load_words():
-    print("Loading word list from file...")
+def choose_word():
     words_file = open('words.txt', 'r')
     line = words_file.readline()
     words = line.split()
-    print("  ", len(words), "words loaded.")
-    return words
-
-
-def choose_word(wordslist):
-    return random.choice(wordslist)
+    return random.choice(words)
 
 
 def word_guessed(sec_word, letters_guessed2):
@@ -25,41 +19,28 @@ def word_guessed(sec_word, letters_guessed2):
     return value == len(sec_word)
 
 
-def letter_present(letter):
-    global correct_letters_guessed
-    if letter in secret_word:
-        if letter not in correct_letters_guessed:
-            correct_letters_guessed.append(letter)
-    return letter in secret_word
-
-
-def get_guessed_word(secret_word1):
+def display_secret_word(secret_word1):
+    posx = 10
+    posy = 400
     code = ''
     for char in secret_word1:
         if char in correct_letters_guessed:
             code += char
         else:
             code += "-"
-    return code
-
-
-def display_secret_word():
-    posx = 10
-    posy = 400
-    for char in get_guessed_word(secret_word):
+    for char in code:
         posx += 40
         secret_word_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, text=char))
 
 
 correct_letters_guessed = []
-wordlist = load_words()
-secret_word = choose_word(wordlist)
+secret_word = choose_word()
 print(secret_word)
-buttons = []
 button_values = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l',
                  13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w',
                  24: 'x', 25: 'y', 26: 'z'}
 secret_word_buttons = []
+buttons = []
 
 
 class Button(object):
@@ -98,22 +79,25 @@ class Button(object):
 
 
 def initialize_game():
-    posx1 = 80   # starting position of buttons
-    posy1 = 30
+    posx = 80   # starting position of buttons
+    posy = 30
     # setting up the buttons
     for i in range(1, 27):
-        posx1 += 40
+        posx += 40
         if i == 14:
-            posy1 += 50
-            posx1 = 120
-        buttons.append(Button((255, 255, 255), posx1, posy1, 30, 30, button_values[i]))
+            posy += 50
+            posx = 120
+        buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
     # setting up secret word text boxes
 
 
 def redraw_game_window():
     pygame.display.flip()
     for obj in buttons:
-        obj.draw(win)
+        if obj.guessed:
+            pass
+        else:
+            obj.draw(win)
     for but in secret_word_buttons:
         but.draw(win)
     tries_left_text = "tries  left : " + str(tries) + "  "
@@ -125,7 +109,7 @@ run = True
 tries = 10
 tries_left_button = Button((255, 255, 255), 10, 200, 100, 30, "tries  left : " + str(tries) + "  ")
 initialize_game()
-display_secret_word()
+display_secret_word(secret_word)
 
 
 while run:
@@ -148,16 +132,18 @@ while run:
                 if button.is_over(pygame.mouse.get_pos()):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if not button.guessed:
-                            letter_present(button_values[buttons.index(button)+1])
-                            print(correct_letters_guessed)
-                            print(get_guessed_word(secret_word))
-                            display_secret_word()
-                            if word_guessed(secret_word, correct_letters_guessed):
-                                print("you have won the game")
-                                tries = -1
-                            if not letter_present(button_values[buttons.index(button)+1]):
+                            letter = button_values[buttons.index(button)+1]
+
+                            if letter in secret_word and letter not in correct_letters_guessed:
+                                correct_letters_guessed.append(letter)
+                            display_secret_word(secret_word)
+
+                            if letter not in secret_word:
                                 tries -= 1
-                            print(tries)
+
+                            if word_guessed(secret_word, correct_letters_guessed):
+                                tries = -1
+
                             button.guessed = True
         redraw_game_window()
     run = False
