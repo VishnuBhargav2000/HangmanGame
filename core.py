@@ -145,8 +145,8 @@ while run:
                     button.update_color((255, 255, 255))
 
             for button in buttons:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if button.is_over(pygame.mouse.get_pos()):
+                if button.is_over(pygame.mouse.get_pos()):
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         if not button.guessed:
                             letter_present(button_values[buttons.index(button)+1])
                             print(correct_letters_guessed)
@@ -154,6 +154,7 @@ while run:
                             display_secret_word()
                             if word_guessed(secret_word, correct_letters_guessed):
                                 print("you have won the game")
+                                tries = -1
                             if not letter_present(button_values[buttons.index(button)+1]):
                                 tries -= 1
                             print(tries)
