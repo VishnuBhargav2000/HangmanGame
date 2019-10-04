@@ -87,4 +87,5 @@ while run:
                         button_trigger[buttons.index(button)] = 1
     redraw_game_window()
 
+
 pygame.quit()
