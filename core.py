@@ -3,6 +3,12 @@ pygame.init()
 win = pygame.display.set_mode((750, 500))
 pygame.display.set_caption("Hangman Game")
 
+hangman_images = [pygame.image.load("assets/10 level/0.jpg"), pygame.image.load("assets/10 level/1.jpg"), pygame.image.load("assets/10 level/2.jpg"), pygame.image.load("assets/10 level/3.jpg"), pygame.image.load("assets/10 level/4.jpg"), pygame.image.load("assets/10 level/5.jpg"),
+                pygame.image.load("assets/10 level/6.jpg"), pygame.image.load("assets/10 level/7.jpg"), pygame.image.load("assets/10 level/8.jpg"), pygame.image.load("assets/10 level/9.jpg"), pygame.image.load("assets/10 level/10.jpg"), pygame.image.load("assets/10 level/won.jpg")]
+
+hangman_image_loader = {10: 0, 9: 1, 8: 2, 7: 3, 6: 4, 5: 5, 4: 6, 3: 7, 2: 8, 1: 9, 0: 10, 11: 11}
+image = hangman_images[0]
+
 
 def choose_word():
     return vocab.word, vocab.category
@@ -101,6 +107,7 @@ def redraw_game_window():
     tries_left_button.update_text(tries_left_text)
     tries_left_button.draw(win)
     category_button.draw(win)
+    win.blit(image, (450, 150))
 
 
 run = True
@@ -112,7 +119,7 @@ display_secret_word(secret_word)
 
 
 while run:
-    while tries > 0:
+    while 11 > tries > 0:
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()  # gets the position of the mouse pointer
             if event.type == pygame.QUIT:
@@ -142,9 +149,10 @@ while run:
 
                             if word_guessed(secret_word, correct_letters_guessed):
                                 redraw_game_window()
-                                tries = -1
+                                tries = 11
 
                             button.guessed = True
+                            image = hangman_images[hangman_image_loader[tries]]
         redraw_game_window()
 
     redraw_game_window()
