@@ -23,11 +23,13 @@ art = ["art", "painting", "singing", "sculpture", "sketch", "draw", "paint", "pa
 
 # CATEGORY MASTER LIST
 category_list = [animals, art, food, fantasy, geography, military, math, music, entertainment, space, nature, vehicles
-                , instruments, technology, household, history, school, parties, internet ]
-word = "sample"
-category = "sample"
+                , instruments, technology, household, history, school, parties, internet]
 
-while word == category:
-    category_Selected = random.choice(category_list)
-    word = random.choice(category_Selected)
-    category = category_Selected[0]
+
+def choose_word():
+    while True:
+        category_Selected = random.choice(category_list)
+        word = random.choice(category_Selected)
+        category = category_Selected[0]
+        if category != word:
+            return word, category
