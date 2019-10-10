@@ -10,16 +10,16 @@ vehicles = ["vehicles", "car", "bus", "truck", "plane", "train", "boat", "blimp"
 music = ["music", "rock", "country", "rap", "fuzz", "metal", "folk", "riff", "chord", "scale", "octave"]
 instruments = ["instruments", "tuba", "guitar", "bass", "harmonica", "violin", "cello", "piano", "drums", "trombone", "saxophone"]
 household = ["household", "phone", "kitchen", "closet", "room", "curtains", "carpet", "attic", "basement", "garage", "driveway"]
-history = ["history", "medieval", "renaissance", "ancient", "prehistoric", "archaeology", "ruins"]
-technology = ["technology", "phone", "wire", "transistor", "gate", "signal", "antenna", "display"]
+history = ["history", "medieval", "ancient", "ruins"]
+technology = ["technology", "phone", "wire", "gate", "signal", "antenna", "display"]
 fantasy = ["fantasy", "dragon", "princess", "sword", "magic", "dungeon", "goblin", "elf", "orc", "hobbit", "unicorn"]
 gaming = ["gaming", "role", "shooter", "strategy", "simulation", "sandbox", "tactical", "steam", "twitch", "indie"]
-school = ["school", "pencil", "paper", "textbook", "teacher", "lunch", "locker", "backpack", "grades", "finals", "graduation"]
+school = ["school", "pencil", "paper", "textbook", "teacher", "lunch", "locker", "backpack", "grades", "finals"]
 internet = ["internet", "wifi", "broadband", "network", "gateway", "router", "provider", "neutrality", "piracy", "reddit"]
 parties = ["parties", "drunk", "wasted", "dancing", "barfing", "social", "music", "guests", "surprise", "frat", "sorority"]
-math = ["math", "division", "subtraction", "addition", "fraction", "algebra", "calculus", "equation"]
-entertainment = ["entertainment", "television", "radio", "streaming", "netflix", "comedy", "play", "sports", "music", "poetry", "park"]
-art = ["art", "painting", "singing", "sculpture", "sketch", "draw", "paint", "palette", "photography", "design", "portrait"]
+math = ["math", "division", "addition", "fraction", "algebra", "calculus", "equation"]
+entertainment = ["entertainment", "radio", "streaming", "netflix", "comedy", "play", "sports", "music", "poetry", "park"]
+art = ["art", "painting", "singing", "sculpture", "sketch", "draw", "paint", "palette", "design", "portrait"]
 
 # CATEGORY MASTER LIST
 category_list = [animals, art, food, fantasy, geography, military, math, music, entertainment, space, nature, vehicles
