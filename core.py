@@ -1,11 +1,12 @@
-import pygame,vocab
+import pygame
+import vocab
+
 pygame.init()
+
 win = pygame.display.set_mode((750, 500))
 pygame.display.set_caption("Hangman Game")
 hangman_images = [pygame.image.load("assets/10 level/0.jpg"), pygame.image.load("assets/10 level/1.jpg"), pygame.image.load("assets/10 level/2.jpg"), pygame.image.load("assets/10 level/3.jpg"), pygame.image.load("assets/10 level/4.jpg"), pygame.image.load("assets/10 level/5.jpg"),
                 pygame.image.load("assets/10 level/6.jpg"), pygame.image.load("assets/10 level/7.jpg"), pygame.image.load("assets/10 level/8.jpg"), pygame.image.load("assets/10 level/9.jpg"), pygame.image.load("assets/10 level/10.jpg"), pygame.image.load("assets/10 level/won.jpg")]
-
-hangman_image_loader = {10: 0, 9: 1, 8: 2, 7: 3, 6: 4, 5: 5, 4: 6, 3: 7, 2: 8, 1: 9, 0: 10, 11: 11}
 
 
 def word_guessed(sec_word, letters_guessed2):
@@ -20,6 +21,7 @@ def display_secret_word(secret_word1):
     posx = 10
     posy = 250
     code = ''
+    # setting up secret word text boxes
     for char in secret_word1:
         if char in correct_letters_guessed:
             code += char
@@ -28,14 +30,6 @@ def display_secret_word(secret_word1):
     for char in code:
         secret_word_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, text=char))
         posx += 40
-
-
-button_values = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l',
-                 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w',
-                 24: 'x', 25: 'y', 26: 'z'}
-letter_buttons = []
-secret_word_buttons = []
-correct_letters_guessed = []
 
 
 class Button(object):
@@ -94,7 +88,6 @@ def initialize_game():
     correct_letters_guessed = []
     display_secret_word(secret_word)
     category_button.update_text("category : " + category)
-    # setting up secret word text boxes
 
 
 def redraw_game_window():
@@ -113,22 +106,48 @@ def redraw_game_window():
     win.blit(image, (450, 150))
 
 
+def end_game():
+    pygame.quit()
+
+
+# assigning each image to tries value so that right image can be displayed.
+hangman_image_loader = {10: 0, 9: 1, 8: 2, 7: 3, 6: 4, 5: 5, 4: 6, 3: 7, 2: 8, 1: 9, 0: 10, 11: 11}
+button_values = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l',
+                 13: 'm', 14: 'n', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w',
+                 24: 'x', 25: 'y', 26: 'z'}
+# list, when  filled up will contain all the buttons used for giving inputs
+letter_buttons = []
+# list, when  filled up will contain all the buttons used for showing the output
+secret_word_buttons = []
+# list that stores the letters guessed by the user that do exist in the word
+correct_letters_guessed = []
+
+# run == True >> game runs;     run == False >> game doesnt run
 run = True
+
+# based upon the difficulty the tries or guesses left is stored
 tries = 10
+
+# choosing a random category and a word from that category from that category
 secret_word, category = vocab.choose_word()
+
+# button initialisation
 tries_left_button = Button((255, 255, 255), 10, 200, 200, 30, "tries  left : " + str(tries) + "  ")
 category_button = Button((255, 255, 255), 10, 150, 200, 30, "category : " + category)
+
+# starting the game
 initialize_game()
+
 display_secret_word(secret_word)
 
 
 while run:
+    # we need to end the game if the tries or the guesses of the player deplete
     while 11 > tries > 0:
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()  # gets the position of the mouse pointer
             if event.type == pygame.QUIT:
-                tries = -1
-                run = False  # exits us out of the loop thus ending the game
+                end_game()
 
             # hover functionality for the buttons
             for button in letter_buttons:
@@ -152,14 +171,16 @@ while run:
                                 tries -= 1
 
                             if word_guessed(secret_word, correct_letters_guessed):
-                                initialize_game()
+                                tries = 11
+                                # exits us out of the loop thus ending the game
 
                             button.guessed = True
                             image = hangman_images[hangman_image_loader[tries]]
         redraw_game_window()
 
-    redraw_game_window()
-    pygame.time.wait(3000)
-    run = False
+    redraw_game_window()    # for showing the winning image
+    pygame.time.wait(5000)
+    initialize_game()
 
-pygame.quit()
+
+pygame.quit()   # quits the game
