@@ -8,6 +8,7 @@ pygame.display.set_caption("Hangman Game")
 hangman_images = {"lose": pygame.image.load("assets/lose.png"), "won": pygame.image.load("assets/won.png"),
                   "correct": pygame.image.load("assets/correct.png"), "wrong": pygame.image.load("assets/wrong.png"),
                   "idle": pygame.image.load("assets/idle.png")}
+bg = pygame.image.load("assets/bg.png")
 
 
 def word_guessed(sec_word, letters_guessed2):
@@ -19,11 +20,10 @@ def word_guessed(sec_word, letters_guessed2):
 
 
 def display_secret_word(secret_word1):
-    posx = 10
+    posx = 20
     posy = 250
     code = ''
     # setting up secret word text boxes
-    pygame.draw.rect(win, (0, 0, 0), [10, 250, 340, 30])
     for char in secret_word1:
         if char in correct_letters_guessed:
             code += char
@@ -70,9 +70,9 @@ class Button(object):
 
 
 def initialize_game():
-    pygame.draw.rect(win, (0, 0, 0), [10, 250, 370, 30])
     posx = 80   # starting position of buttons
     posy = 30
+    win.blit(bg, (0, 0))
     global image, tries, secret_word, category, letter_buttons, secret_word_buttons, correct_letters_guessed
     letter_buttons = []
     # setting up the buttons
@@ -90,27 +90,77 @@ def initialize_game():
     correct_letters_guessed = []
     display_secret_word(secret_word)
     category_button.update_text("category : " + category)
+    display_secret_word(secret_word)
+    welcome_player.update_text("welcome, " + str(name))
 
 
 def redraw_game_window():
     pygame.display.flip()
+
     for obj in letter_buttons:
         if obj.guessed:
             pass
         else:
             obj.draw(win)
+
     for but in secret_word_buttons:
         but.draw(win)
-    pygame.draw.rect(win, (0, 0, 0), [400, 150, 300, 400])
-    tries_left_text = "tries  left : " + str(tries) + "  "
-    tries_left_button.update_text(tries_left_text)
+
+    pygame.draw.rect(win, (255, 255, 255), [400, 150, 300, 300])
+    tries_left_button.update_text("tries  left : " + str(tries) + "  ")
     tries_left_button.draw(win)
     category_button.draw(win)
     win.blit(image, (400, 150))
+    welcome_player.draw(win)
 
 
 def end_game():
     pygame.quit()
+
+
+def start_menu():
+    global start, name
+    posx = 80
+    posy = 120
+    for i in range(1, 27):
+        posx += 40
+        if i == 14:
+            posy += 50
+            posx = 120
+        letter_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
+    done = Button((179, 220, 216), posx-100, posy+100, 60, 30, "DONE")
+    display_name = Button((255, 255, 255), posx-400, posy+100, 200, 30, " player name : ")
+
+    def redraw_window():
+        pygame.display.flip()
+        win.blit(bg, (0, 0))
+        for obj in letter_buttons:
+            if obj.guessed:
+                pass
+            else:
+                obj.draw(win)
+        done.draw(win)
+        display_name.update_text(" player name : " + str(name))
+        display_name.draw(win)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                end_game()
+            if done.is_over(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    return
+            for button in letter_buttons:
+                if button.is_over(pygame.mouse.get_pos()):
+                    if not button.guessed:
+                        button.update_color((179, 220, 216))
+                else:
+                    button.update_color((255, 255, 255))
+            for button in letter_buttons:
+                if button.is_over(pygame.mouse.get_pos()):
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                            letter = button_values[letter_buttons.index(button)+1]
+                            name += letter
+            redraw_window()
 
 
 # assigning each image to tries value so that right image can be displayed.
@@ -125,8 +175,8 @@ secret_word_buttons = []
 correct_letters_guessed = []
 
 # run == True >> game runs;     run == False >> game doesnt run
-run = True
-
+run, start = True, True
+name = ""
 # based upon the difficulty the tries or guesses left is stored
 tries = 10
 
@@ -134,13 +184,15 @@ tries = 10
 secret_word, category = vocab.choose_word()
 
 # button initialisation
-tries_left_button = Button((255, 255, 255), 10, 200, 200, 30, "tries  left : " + str(tries) + "  ")
-category_button = Button((255, 255, 255), 10, 150, 200, 30, "category : " + category)
+tries_left_button = Button((255, 255, 255), 20, 200, 200, 30, "tries  left : " + str(tries) + "  ")
+category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
+welcome_player = Button((255, 255, 255), 20, 200, 200, 30, "welcome, " + name)
 
 # starting the game
-initialize_game()
+# initialize_game()
 
-display_secret_word(secret_word)
+start_menu()
+initialize_game()
 
 
 while run:
@@ -161,7 +213,7 @@ while run:
             for button in letter_buttons:
                 if button.is_over(pygame.mouse.get_pos()):
                     if not button.guessed:
-                        button.update_color((200, 2, 225))
+                        button.update_color((179, 220, 216))
                 else:
                     button.update_color((255, 255, 255))
 
