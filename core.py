@@ -207,6 +207,7 @@ tries_left_button = Button((255, 255, 255), 20, 200, 200, 30, "tries  left : " +
 category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
 welcome_player = Button((255, 255, 255), 20, 120, 200, 30, "welcome, " + name)
 
+
 # starting the game
 # initialize_game()
 
