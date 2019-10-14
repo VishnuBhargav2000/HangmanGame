@@ -30,7 +30,7 @@ def display_secret_word(secret_word1):
         else:
             code += "-"
     for char in code:
-        secret_word_buttons.append(Button((255, 255, 255), posx, posy, 25, 30, text=char))
+        secret_word_buttons.append(Button((179, 220, 216), posx, posy, 25, 30, text=char))
         posx += 35
 
 
@@ -84,12 +84,16 @@ def initialize_game():
             posy += 50
             posx = 120
         letter_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
-    # selecting a random secret word and category its from
+
+    # choosing a random category and a word from that category from that category
     secret_word, category = vocab.choose_word()
     print(secret_word)
 
-    # resetting the tries user has
-    tries = 10
+    # based upon the difficulty the tries or guesses left is stored
+    if difficulty == "hard":
+        tries = 7
+    else:
+        tries = 10
 
     # resetting the image to welcome image
     image = hangman_images["idle"]
@@ -132,7 +136,7 @@ def end_game():
 
 # noinspection PyShadowingNames
 def start_menu():
-    global start, name
+    global start, name, difficulty
     posx = 80
     posy = 170
     for i in range(1, 27):
@@ -141,7 +145,9 @@ def start_menu():
             posy += 50
             posx = 120
         letter_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
-    done = Button((179, 220, 216), posx-150, posy+100, 60, 30, "DONE")
+    done = Button((179, 220, 216), posx-120, posy+156, 60, 30, "DONE")
+    easy = Button((179, 220, 216), 350, posy + 105, 60, 30, "Easy")
+    hard = Button((179, 220, 216), 450, posy + 105, 60, 30, "Hard")
     display_name = Button((255, 255, 255), posx-400, posy+60, 200, 30, " player name : ")
     bg = pygame.image.load("assets/start_screen.png")
 
@@ -154,22 +160,54 @@ def start_menu():
             else:
                 obj.draw(win)
         done.draw(win)
+        easy.draw(win)
+        hard.draw(win)
         display_name.update_text(" player name : " + str(name))
         display_name.draw(win)
 
-    while True:
+    while True:     # main loop
+
+        # quits thw game wen close is pressed
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 end_game()
+
+            # button mechanics for difficulty done buttons
             if done.is_over(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     return
+            if easy.is_over(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    difficulty = "easy"
+            if hard.is_over(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    difficulty = "hard"
+
+            # hover functionality for those buttons
+            if easy.is_over(pygame.mouse.get_pos()):
+                easy.update_color((200, 240, 240))
+            else:
+                easy.update_color((179, 220, 216))
+
+            if hard.is_over(pygame.mouse.get_pos()):
+                hard.update_color((200, 240, 240))
+            else:
+                hard.update_color((179, 220, 216))
+
+            if done.is_over(pygame.mouse.get_pos()):
+                done.update_color((200, 240, 240))
+            else:
+                done.update_color((179, 220, 216))
+
+            # hover functionality for letter buttons
             for button in letter_buttons:
                 if button.is_over(pygame.mouse.get_pos()):
                     if not button.guessed:
                         button.update_color((179, 220, 216))
                 else:
                     button.update_color((255, 255, 255))
+
+            # mechanism of letter buttons
             for button in letter_buttons:
                 if button.is_over(pygame.mouse.get_pos()):
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -192,24 +230,17 @@ secret_word_buttons = []
 # list that stores the letters guessed by the user that do exist in the word
 correct_letters_guessed = []
 
-# run == True >> game runs;     run == False >> game doesnt run
 run, start = True, True
-name = ""
+name, difficulty, tries = "", "", 0
+secret_word, category = "", ""
+score = 0
 
-# based upon the difficulty the tries or guesses left is stored
-tries = 10
-
-# choosing a random category and a word from that category from that category
-secret_word, category = vocab.choose_word()
-
-# button initialisation
+# these are not actually buttons i have used objects of button class to display variables (text) on screen
+# because, it makes it a lot simpler and more productive
 tries_left_button = Button((255, 255, 255), 20, 200, 200, 30, "tries  left : " + str(tries) + "  ")
 category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
 welcome_player = Button((255, 255, 255), 20, 120, 200, 30, "welcome, " + name)
 
-
-# starting the game
-# initialize_game()
 
 start_menu()
 initialize_game()
@@ -244,20 +275,26 @@ while run:
                             letter = button_values[letter_buttons.index(button)+1]
                             # registering click of the button
 
-                            if letter in secret_word and letter not in correct_letters_guessed:
+                            if letter in secret_word and letter not in correct_letters_guessed:     # correct guess
                                 correct_letters_guessed.append(letter)
                                 image = hangman_images["correct"]
 
-                            display_secret_word(secret_word)
+                                # increasing the score of the player after every correct guess
+                                if difficulty == "easy":
+                                    score += 70
+                                else:
+                                    score += 100
 
-                            if letter not in secret_word:
+                            display_secret_word(secret_word)  # updating the secret word on screen
+
+                            if letter not in secret_word:       # wrong guess
                                 tries -= 1
                                 image = hangman_images["wrong"]
 
                             if word_guessed(secret_word, correct_letters_guessed):
-                                tries = -1
+                                tries = -1      # exits us out of the loop thus ending the game
                                 image = hangman_images["won"]
-                                # exits us out of the loop thus ending the game
+                                score += 250
 
                             button.guessed = True
         redraw_game_window()
