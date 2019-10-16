@@ -76,13 +76,13 @@ def initialize_game():
     letter_buttons = []
 
     # setting up the buttons
-    posx = 80   # starting position of buttons
-    posy = 30
+    posx = 70   # starting position of buttons
+    posy = 40
     for i in range(1, 27):
         posx += 40
         if i == 14:
-            posy += 50
-            posx = 120
+            posy += 60
+            posx = 110
         letter_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
 
     # choosing a random category and a word from that category from that category
@@ -237,9 +237,9 @@ score = 0
 
 # these are not actually buttons i have used objects of button class to display variables (text) on screen
 # because, it makes it a lot simpler and more productive
-tries_left_button = Button((255, 255, 255), 20, 200, 200, 30, "tries  left : " + str(tries) + "  ")
+tries_left_button = Button((255, 255, 255), 20, 350, 200, 30, "tries  left : " + str(tries) + "  ")
 category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
-welcome_player = Button((255, 255, 255), 20, 120, 200, 30, "welcome, " + name)
+welcome_player = Button((255, 255, 255), 20, 300, 200, 30, "welcome, " + name)
 
 
 start_menu()
