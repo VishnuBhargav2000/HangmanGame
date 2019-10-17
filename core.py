@@ -72,7 +72,7 @@ class Button(object):
 
 def initialize_game():
     win.blit(bg, (0, 0))
-    global image, tries, secret_word, category, letter_buttons, secret_word_buttons, correct_letters_guessed
+    global image, tries, secret_word, category, letter_buttons, secret_word_buttons, score, correct_letters_guessed
     letter_buttons = []
 
     # setting up the buttons
@@ -106,6 +106,11 @@ def initialize_game():
     display_secret_word(secret_word)
     category_button.update_text("category : " + category)
     welcome_player.update_text("welcome, " + str(name))
+
+    if len(secret_word) > 5:
+        score = 100
+    else:
+        score = 0
 
 
 def redraw_game_window():
@@ -301,5 +306,6 @@ while run:
 
     redraw_game_window()    # for showing the winning image
     pygame.time.wait(3000)
+    print(score)
     initialize_game()
 
