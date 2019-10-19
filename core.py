@@ -12,12 +12,13 @@ bg = pygame.image.load("assets/bg.png")
 
 mydb = mysql.connector.connect(
     host="remotemysql.com",
-    user="OEN47bUZWb",
-    passwd="4qi1iXGndT",
-    database="OEN47bUZWb")
+    user="NON1wuL7Sf",
+    passwd="kEFFpgWwFZ",
+    database="NON1wuL7Sf")
 mycursor = mydb.cursor()
 # mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);")
 # mycursor.execute("drop TABLE users;")
+
 
 def word_guessed(sec_word, letters_guessed2):
     value = 0
@@ -116,9 +117,9 @@ def initialize_game():
     welcome_player.update_text("welcome, " + str(name))
 
     if len(secret_word) > 5:
-        score = 100
+        score += 100
     else:
-        score = 0
+        score += 0
 
 
 def redraw_game_window():
@@ -144,6 +145,13 @@ def redraw_game_window():
 
 def end_game():
     # quits the game
+    global name, score
+    sql = "INSERT INTO users(NAME, score) VALUES (%s, %s)"
+    val = (name, score)
+
+    mycursor.execute(sql, val)
+
+    mydb.commit()
     pygame.quit()
 
 
@@ -246,7 +254,10 @@ correct_letters_guessed = []
 run, start = True, True
 name, difficulty, tries = "", "", 0
 secret_word, category = "", ""
-score = 0
+if len(secret_word) > 5:
+    score = 100
+else:
+    score = 0
 
 # these are not actually buttons i have used objects of button class to display variables (text) on screen
 # because, it makes it a lot simpler and more productive
