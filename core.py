@@ -1,6 +1,6 @@
 import pygame
 import vocab
-
+import mysql.connector
 pygame.init()
 
 win = pygame.display.set_mode((750, 500))
@@ -10,6 +10,14 @@ hangman_images = {"lose": pygame.image.load("assets/lose.png"), "won": pygame.im
                   "idle": pygame.image.load("assets/idle.png")}
 bg = pygame.image.load("assets/bg.png")
 
+mydb = mysql.connector.connect(
+    host="remotemysql.com",
+    user="OEN47bUZWb",
+    passwd="4qi1iXGndT",
+    database="OEN47bUZWb")
+mycursor = mydb.cursor()
+# mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);")
+# mycursor.execute("drop TABLE users;")
 
 def word_guessed(sec_word, letters_guessed2):
     value = 0
