@@ -20,6 +20,14 @@ mycursor = mydb.cursor()
 # mycursor.execute("drop TABLE users;")
 
 
+def reset_positions():
+    easy.x = 350
+    hard.x = 450
+    easy.y = 325
+    hard.y = 325
+    save_and_exit.y = 400
+
+
 def word_guessed(sec_word, letters_guessed2):
     value = 0
     for char in sec_word:
@@ -83,6 +91,7 @@ def initialize_game():
     win.blit(bg, (0, 0))
     global image, tries, secret_word, category, letter_buttons, secret_word_buttons, score, correct_letters_guessed
     letter_buttons = []
+    reset_positions()
 
     # setting up the buttons
     posx = 70   # starting position of buttons
@@ -143,16 +152,78 @@ def redraw_game_window():
     welcome_player.draw(win)
 
 
-def end_game():
+def close_game():
     # quits the game
-    global name, score
-    sql = "INSERT INTO users(NAME, score) VALUES (%s, %s)"
-    val = (name, score)
-
-    mycursor.execute(sql, val)
-
-    mydb.commit()
     pygame.quit()
+
+
+def end_game():
+    global difficulty
+
+    def change_pos():
+        easy.x = 200
+        hard.x = 350
+        easy.y = 180
+        hard.y = 180
+        save_and_exit.y = 300
+
+    def redraw_win():
+        change_pos()
+        hard.draw(win)
+        easy.draw(win)
+        save_and_exit.draw(win)
+        pygame.display.flip()
+
+    def save_n_exit():
+        global name, score
+        sql = "INSERT INTO users(NAME, score) VALUES (%s, %s)"
+        val = (name, score)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        close_game()
+
+    background = pygame.image.load("assets/end_screen.png")
+    win.blit(background, (0, 0))
+
+    if word_guessed(secret_word, correct_letters_guessed):
+        char = hangman_images["won"]
+    else:
+        char = hangman_images["lose"]
+    win.blit(char, (400, 150))
+
+    while True:
+        for events in pygame.event.get():
+            position = pygame.mouse.get_pos()
+
+            if save_and_exit.is_over(position):
+                if events.type == pygame.MOUSEBUTTONDOWN:
+                    save_n_exit()
+
+            if easy.is_over(position):
+                if events.type == pygame.MOUSEBUTTONDOWN:
+                    difficulty = "easy"
+                    return
+
+            if hard.is_over(position):
+                if events.type == pygame.MOUSEBUTTONDOWN:
+                    difficulty = "hard"
+                    return
+            # hover functionality for those buttons
+            if easy.is_over(position):
+                easy.update_color((200, 240, 240))
+            else:
+                easy.update_color((179, 220, 216))
+
+            if save_and_exit.is_over(position):
+                save_and_exit.update_color((200, 240, 240))
+            else:
+                save_and_exit.update_color((179, 220, 216))
+
+            if hard.is_over(position):
+                hard.update_color((200, 240, 240))
+            else:
+                hard.update_color((179, 220, 216))
+            redraw_win()
 
 
 # noinspection PyShadowingNames
@@ -166,10 +237,6 @@ def start_menu():
             posy += 50
             posx = 120
         letter_buttons.append(Button((255, 255, 255), posx, posy, 30, 30, button_values[i]))
-    done = Button((179, 220, 216), posx-120, posy+156, 60, 30, "DONE")
-    easy = Button((179, 220, 216), 350, posy + 105, 60, 30, "Easy")
-    hard = Button((179, 220, 216), 450, posy + 105, 60, 30, "Hard")
-    display_name = Button((255, 255, 255), posx-400, posy+60, 200, 30, " player name : ")
     bg = pygame.image.load("assets/start_screen.png")
 
     def redraw_window():
@@ -180,7 +247,6 @@ def start_menu():
                 pass
             else:
                 obj.draw(win)
-        done.draw(win)
         easy.draw(win)
         hard.draw(win)
         display_name.update_text(" player name : " + str(name))
@@ -191,19 +257,17 @@ def start_menu():
         # quits thw game wen close is pressed
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                end_game()
+                close_game()
 
             # button mechanics for difficulty done buttons
-            if done.is_over(pygame.mouse.get_pos()):
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    return
             if easy.is_over(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     difficulty = "easy"
+                    return
             if hard.is_over(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     difficulty = "hard"
-
+                    return
             # hover functionality for those buttons
             if easy.is_over(pygame.mouse.get_pos()):
                 easy.update_color((200, 240, 240))
@@ -214,11 +278,6 @@ def start_menu():
                 hard.update_color((200, 240, 240))
             else:
                 hard.update_color((179, 220, 216))
-
-            if done.is_over(pygame.mouse.get_pos()):
-                done.update_color((200, 240, 240))
-            else:
-                done.update_color((179, 220, 216))
 
             # hover functionality for letter buttons
             for button in letter_buttons:
@@ -264,7 +323,10 @@ else:
 tries_left_button = Button((255, 255, 255), 20, 350, 200, 30, "tries  left : " + str(tries) + "  ")
 category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
 welcome_player = Button((255, 255, 255), 20, 300, 200, 30, "welcome, " + name)
-
+save_and_exit = Button((179, 220, 216), 50, 400, 200, 30, "save and exit")
+easy = Button((179, 220, 216), 350, 325, 60, 30, "Easy")
+hard = Button((179, 220, 216), 450, 325, 60, 30, "Hard")
+display_name = Button((255, 255, 255), 200, 280, 200, 30, " player name : ")
 
 start_menu()
 initialize_game()
@@ -272,28 +334,22 @@ initialize_game()
 
 while run:
     # we need to end the game if the tries or the guesses of the player deplete
-    while tries >= 0:
-        if tries == 0:
-            # player has depleted all of his tries.
-            image = hangman_images["lose"]
-            redraw_game_window()
-            break
-
+    while tries > 0:
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()  # gets the position of the mouse pointer
             if event.type == pygame.QUIT:
-                end_game()
+                close_game()
 
             # hover functionality for the buttons
             for button in letter_buttons:
-                if button.is_over(pygame.mouse.get_pos()):
+                if button.is_over(pos):
                     if not button.guessed:
                         button.update_color((179, 220, 216))
                 else:
                     button.update_color((255, 255, 255))
 
             for button in letter_buttons:
-                if button.is_over(pygame.mouse.get_pos()):
+                if button.is_over(pos):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if not button.guessed:
                             letter = button_values[letter_buttons.index(button)+1]
@@ -317,14 +373,14 @@ while run:
 
                             if word_guessed(secret_word, correct_letters_guessed):
                                 tries = -1      # exits us out of the loop thus ending the game
-                                image = hangman_images["won"]
                                 score += 250
 
                             button.guessed = True
         redraw_game_window()
 
     redraw_game_window()    # for showing the winning image
-    pygame.time.wait(3000)
+    pygame.time.wait(1000)
     print(score)
+    end_game()
     initialize_game()
 
