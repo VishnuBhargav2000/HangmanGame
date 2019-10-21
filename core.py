@@ -1,6 +1,7 @@
 import pygame
 import vocab
 import mysql.connector
+import socket
 pygame.init()
 
 win = pygame.display.set_mode((750, 500))
@@ -10,12 +11,26 @@ hangman_images = {"lose": pygame.image.load("assets/lose.png"), "won": pygame.im
                   "idle": pygame.image.load("assets/idle.png")}
 bg = pygame.image.load("assets/bg.png")
 
-mydb = mysql.connector.connect(
-    host="remotemysql.com",
-    user="NON1wuL7Sf",
-    passwd="kEFFpgWwFZ",
-    database="NON1wuL7Sf")
-mycursor = mydb.cursor()
+
+def is_internet_connected():
+    try:
+        # connect to the host -- tells us if the host is actually reachable
+        socket.create_connection(("www.google.com", 80))
+        print("Connected")
+        return True
+    except OSError:
+        print("not connected")
+        pass
+    return False
+
+
+if is_internet_connected():
+    mydb = mysql.connector.connect(
+        host="remotemysql.com",
+        user="NON1wuL7Sf",
+        passwd="kEFFpgWwFZ",
+        database="NON1wuL7Sf")
+    mycursor = mydb.cursor()
 # mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);")
 # mycursor.execute("drop TABLE users;")
 
@@ -176,11 +191,14 @@ def end_game():
 
     def save_n_exit():
         global name, score
-        sql = "INSERT INTO users(NAME, score) VALUES (%s, %s)"
-        val = (name, score)
-        mycursor.execute(sql, val)
-        mydb.commit()
-        close_game()
+        if is_internet_connected():
+            sql = "INSERT INTO users(NAME, score) VALUES (%s, %s)"
+            val = (name, score)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            close_game()
+        else:
+            close_game()
 
     background = pygame.image.load("assets/end_screen.png")
     win.blit(background, (0, 0))
@@ -228,6 +246,10 @@ def end_game():
 
 # noinspection PyShadowingNames
 def start_menu():
+    if is_internet_connected():
+        internet_status.update_text("ONLINE")
+    else:
+        internet_status.update_text("OFFLINE")
     global start, name, difficulty
     posx = 80
     posy = 170
@@ -251,6 +273,7 @@ def start_menu():
         hard.draw(win)
         display_name.update_text(" player name : " + str(name))
         display_name.draw(win)
+        internet_status.draw(win)
 
     while True:     # main loop
 
@@ -326,7 +349,8 @@ welcome_player = Button((255, 255, 255), 20, 300, 200, 30, "welcome, " + name)
 save_and_exit = Button((179, 220, 216), 50, 400, 200, 30, "save and exit")
 easy = Button((179, 220, 216), 350, 325, 60, 30, "Easy")
 hard = Button((179, 220, 216), 450, 325, 60, 30, "Hard")
-display_name = Button((255, 255, 255), 200, 280, 200, 30, " player name : ")
+internet_status = Button((179, 220, 216), 300, 390, 80, 30, "internet status")
+display_name = Button((255, 255, 255), 200, 280, 230, 30, " player name : ")
 
 start_menu()
 initialize_game()
