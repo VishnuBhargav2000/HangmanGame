@@ -163,7 +163,7 @@ def redraw_game_window():
     if tries != -1:
         tries_left_button.draw(win)
     category_button.draw(win)
-    win.blit(image, (400, 150))
+    win.blit(image, (400, 155))
     welcome_player.draw(win)
 
 
@@ -178,9 +178,9 @@ def end_game():
     def change_pos():
         easy.x = 200
         hard.x = 350
-        easy.y = 180
-        hard.y = 180
-        save_and_exit.y = 300
+        easy.y = 170
+        hard.y = 170
+        save_and_exit.y = 420
 
     def redraw_win():
         change_pos()
@@ -200,6 +200,8 @@ def end_game():
         else:
             close_game()
 
+    display_score = Button((179, 220, 216), 200, 290, 50, 30, str(score))
+    display_word = Button((179, 220, 216), 220, 235, 150, 30, str(secret_word))
     background = pygame.image.load("assets/end_screen.png")
     win.blit(background, (0, 0))
 
@@ -208,7 +210,8 @@ def end_game():
     else:
         char = hangman_images["lose"]
     win.blit(char, (400, 150))
-
+    display_score.draw(win)
+    display_word.draw(win)
     while True:
         for events in pygame.event.get():
             position = pygame.mouse.get_pos()
@@ -290,6 +293,7 @@ def start_menu():
             if hard.is_over(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     difficulty = "hard"
+                    end_game()
                     return
             # hover functionality for those buttons
             if easy.is_over(pygame.mouse.get_pos()):
@@ -336,6 +340,7 @@ correct_letters_guessed = []
 run, start = True, True
 name, difficulty, tries = "", "", 0
 secret_word, category = "", ""
+
 if len(secret_word) > 5:
     score = 100
 else:
@@ -407,4 +412,3 @@ while run:
     print(score)
     end_game()
     initialize_game()
-
