@@ -1,5 +1,5 @@
+# DRIVER CODE 2 ############################################
 import random
-
 animals = ["animals", "cat", "bat", "dog", "bear", "whale", "lion", "pig", "goat", "cow", "snake"]
 food = ["food", "apple", "banana", "pear", "pizza", "pie", "beef", "taco", "cheese", "carrot", "peanut"]
 geography = ["geography", "mountain", "lake", "ocean", "hill", "valley", "cliff", "bay", "peninsula", "range", "plains"]
@@ -33,3 +33,5 @@ def choose_word():
         category = category_Selected[0]
         if category != word:
             return word, category
+
+# DRIVER CODE 2 END ############################################

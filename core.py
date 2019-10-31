@@ -3,6 +3,7 @@ import vocab
 import mysql.connector
 import socket
 
+#  DRIVER CODE 3 #######################################
 pygame.init()
 win = pygame.display.set_mode((750, 500))
 pygame.display.set_caption("Hangman Game")
@@ -33,7 +34,7 @@ if is_internet_connected():
         passwd="kEFFpgWwFZ",
         database="NON1wuL7Sf")
     mycursor = mydb.cursor()
-# mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);")
+# mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);") bvcd3s2``
 # mycursor.execute("drop TABLE users;")
 
 
@@ -44,19 +45,23 @@ def reset_positions():
     easy.y = 325
     hard.y = 325
     save_and_exit.y = 400
+# DRIVER CODE 3 END   #######################################
 
 
+# DRIVER CODE 2 ############################################
 def word_guessed(sec_word, letters_guessed2):
     value = 0
     for char in sec_word:
         if char in letters_guessed2:
             value += 1
     return value == len(sec_word)
+# DRIVER CODE 2 END ############################################
 
 
+# GUI ############################################
 def display_secret_word(secret_word1):
     posx = 20
-    posy = 250
+    posy = 260
     code = ''
     # setting up secret word text boxes
     for char in secret_word1:
@@ -73,7 +78,7 @@ def display_secret_word(secret_word1):
 class Button(object):
     # a button class that eases up the button creation
     # takes color(hex values) x and y co-ordinates, width, height and the text
-    def __init__(self, color, x, y, width, height, text=''):
+    def __init__(self, color, x, y, width, height, text='', font=0):
         self.color = color
         self.x = x
         self.y = y
@@ -81,12 +86,21 @@ class Button(object):
         self.height = height
         self.text = text
         self.guessed = False
+        self.font = font
 
     # for placing it on the screen
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
-        font = pygame.font.SysFont('arial', 15)
-        text = font.render(self.text, 1, (0, 0, 0))
+        if self.font == 0:
+            font = pygame.font.SysFont('arial', 15)
+        else:
+            font = pygame.font.SysFont('font.tff', 30)
+
+        if self.font == 0:
+            text = font.render(self.text, 1, (0, 0, 0))
+        else:
+            text = font.render(self.text, 1, (100, 100, 100))
+
         win.blit(text,
                  (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
 
@@ -104,8 +118,10 @@ class Button(object):
     def update_text(self, text):
         # updates the text of the button
         self.text = text
+# GUI END ############################################
 
 
+# DRIVER CODE 1 ############################################
 def initialize_game():
     win.blit(bg, (0, 0))
     global image, tries, secret_word, category, letter_buttons, secret_word_buttons, score, correct_letters_guessed, temp_Score
@@ -143,10 +159,12 @@ def initialize_game():
 
     # resetting the text displayed on the game window
     display_secret_word(secret_word)
-    category_button.update_text("category : " + category)
-    welcome_player.update_text("welcome, " + str(name))
+    category_button.update_text(category)
+    welcome_player.update_text("welcome, "+str(name))
+# DRIVER CODE 1 END ############################################
 
 
+# GUI  ############################################
 def redraw_game_window():
     # puts the content on the screen.
     pygame.display.flip()  # updates the display
@@ -161,13 +179,14 @@ def redraw_game_window():
 
     pygame.draw.rect(win, (255, 255, 255), [400, 150, 300, 300])
 
-    tries_left_button.update_text("tries  left : " + str(tries) + "  ")
+    tries_left_button.update_text(str(tries) + " tries ")
     if tries != -1:
         tries_left_button.draw(win)
 
     category_button.draw(win)
     win.blit(image, (400, 155))
     welcome_player.draw(win)
+# GUI END ############################################
 
 
 def close_game():
@@ -358,9 +377,9 @@ secret_word, category = "", ""
 score, temp_Score = 0, 0
 
 # text boxes and buttons that show up on the screen
-tries_left_button = Button((255, 255, 255), 20, 350, 200, 30, "tries  left : " + str(tries) + "  ")
-category_button = Button((255, 255, 255), 20, 150, 200, 30, "category : " + category)
-welcome_player = Button((255, 255, 255), 20, 300, 200, 30, "welcome, " + name)
+tries_left_button = Button((255, 255, 255), 105, 393, 80, 30, str(tries) + " tries left", 1)
+category_button = Button((255, 255, 255), 20, 345, 200, 30, "category : " + category, 1)
+welcome_player = Button((255, 255, 255), 25, 194, 200, 30, "welcome, " + name, 1)
 save_and_exit = Button((179, 220, 216), 50, 400, 200, 30, "save and exit")
 easy = Button((179, 220, 216), 350, 325, 60, 30, "Easy")
 hard = Button((179, 220, 216), 450, 325, 60, 30, "Hard")
