@@ -365,6 +365,7 @@ name, difficulty, tries = "", "", 0
 secret_word, category = "", ""
 score, temp_Score = 0, 0
 
+# test
 # text boxes and buttons that show up on the screen
 tries_left_button = Button((255, 255, 255), 105, 393, 80, 30, str(tries) + " tries left", 1)
 category_button = Button((255, 255, 255), 20, 345, 200, 30, "category : " + category, 1)
