@@ -25,7 +25,6 @@ art = ["art", "painting", "singing", "sculpture", "sketch", "draw", "paint", "pa
 category_list = [animals, art, food, fantasy, geography, military, math, music, entertainment, space, nature, vehicles
                 , instruments, technology, household, history, school, parties, internet]
 
-
 def choose_word():
     while True:
         category_Selected = random.choice(category_list)
