@@ -24,10 +24,8 @@ def is_internet_connected():
         print("not connected")
         pass
     return False
-# DRIVER CODE 3 END ############################################
 
 
-# DATABASE   ###################################################
 if is_internet_connected():
 
     mydb = mysql.connector.connect(
@@ -38,10 +36,8 @@ if is_internet_connected():
     mycursor = mydb.cursor()
 # mycursor.execute("CREATE TABLE users(NAME varchar(255), score int);") bvcd3s2``
 # mycursor.execute("drop TABLE users;")
-# DATABASE END   ###############################################
 
 
-# DRIVER CODE 3   ##############################################
 def reset_positions():
     # resets the positions of the buttons so that they can be re-purposed
     easy.x = 350
@@ -49,10 +45,10 @@ def reset_positions():
     easy.y = 325
     hard.y = 325
     save_and_exit.y = 400
-# DRIVER CODE 3 END   ##########################################
+# DRIVER CODE 3 END   #######################################
 
 
-# DRIVER CODE 2 ################################################
+# DRIVER CODE 2 ############################################
 def word_guessed(sec_word, letters_guessed2):
     value = 0
     for char in sec_word:
@@ -62,7 +58,7 @@ def word_guessed(sec_word, letters_guessed2):
 # DRIVER CODE 2 END ############################################
 
 
-# DRIVER CODE 1 ################################################
+# GUI ############################################
 def display_secret_word(secret_word1):
     posx = 20
     posy = 260
@@ -76,10 +72,8 @@ def display_secret_word(secret_word1):
     for char in code:
         secret_word_buttons.append(Button((179, 220, 216), posx, posy, 25, 30, text=char))
         posx += 35
-# DRIVER CODE 1 END  ###########################################
 
 
-# GUI ##########################################################
 # noinspection PyShadowingNames
 class Button(object):
     # a button class that eases up the button creation
@@ -124,10 +118,10 @@ class Button(object):
     def update_text(self, text):
         # updates the text of the button
         self.text = text
-# GUI END ######################################################
+# GUI END ############################################
 
 
-# DRIVER CODE 1 ################################################
+# DRIVER CODE 1 ############################################
 def initialize_game():
     win.blit(bg, (0, 0))
     global image, tries, secret_word, category, letter_buttons, secret_word_buttons, score, correct_letters_guessed, temp_Score
@@ -170,7 +164,7 @@ def initialize_game():
 # DRIVER CODE 1 END ############################################
 
 
-# GUI  #########################################################
+# GUI  ############################################
 def redraw_game_window():
     # puts the content on the screen.
     pygame.display.flip()  # updates the display
@@ -192,17 +186,14 @@ def redraw_game_window():
     category_button.draw(win)
     win.blit(image, (400, 155))
     welcome_player.draw(win)
-# GUI END ######################################################
+# GUI END ############################################
 
 
-# DRIVER CODE 1 ################################################
 def close_game():
     # quits the game
     pygame.quit()
-# DRIVER CODE 1 END ############################################
 
 
-# DRIVER CODE 1  + GUI #########################################
 def end_round():
     """
     opens up a window that shows the word and their score and takes user input on
@@ -364,10 +355,7 @@ def start_menu():
                         letter = button_values[letter_buttons.index(button) + 1]
                         name += letter
             redraw_window()
-# DRIVER CODE 1  + GUI END #####################################
 
-
-# DRIVER CODE 1 ################################################
 
 # assigning each image to tries value so that right image can be displayed.
 button_values = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l',
@@ -388,9 +376,6 @@ name, difficulty, tries = "", "", 0
 secret_word, category = "", ""
 score, temp_Score = 0, 0
 
-# DRIVER CODE 1 END ############################################
-
-# GUI ##########################################################
 # text boxes and buttons that show up on the screen
 tries_left_button = Button((255, 255, 255), 105, 393, 80, 30, str(tries) + " tries left", 1)
 category_button = Button((255, 255, 255), 20, 345, 200, 30, "category : " + category, 1)
@@ -400,7 +385,6 @@ easy = Button((179, 220, 216), 350, 325, 60, 30, "Easy")
 hard = Button((179, 220, 216), 450, 325, 60, 30, "Hard")
 internet_status = Button((179, 220, 216), 300, 390, 80, 30, "internet status")
 display_name = Button((255, 255, 255), 200, 280, 230, 30, " player name : ")
-# GUI END ######################################################
 
 start_menu()  # shows the start menu and takes the input(name, difficulty) from user
 initialize_game()  # chooses a word and initialises all the values to default
