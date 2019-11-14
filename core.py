@@ -12,7 +12,6 @@ hangman_images = {"lose": pygame.image.load("assets/lose.png"), "won": pygame.im
 bg = pygame.image.load("assets/bg.png")
 
 
-
 def is_internet_connected():
     # returns the availability of active internet connection
     try:
