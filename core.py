@@ -3,7 +3,6 @@ import vocab
 import mysql.connector
 import socket
 
-#  DRIVER CODE 3 #######################################
 pygame.init()
 win = pygame.display.set_mode((750, 500))
 pygame.display.set_caption("Hangman Game")
@@ -45,20 +44,16 @@ def reset_positions():
     easy.y = 325
     hard.y = 325
     save_and_exit.y = 400
-# DRIVER CODE 3 END   #######################################
 
 
-# DRIVER CODE 2 ############################################
 def word_guessed(sec_word, letters_guessed2):
     value = 0
     for char in sec_word:
         if char in letters_guessed2:
             value += 1
     return value == len(sec_word)
-# DRIVER CODE 2 END ############################################
 
 
-# GUI ############################################
 def display_secret_word(secret_word1):
     posx = 20
     posy = 260
@@ -118,10 +113,8 @@ class Button(object):
     def update_text(self, text):
         # updates the text of the button
         self.text = text
-# GUI END ############################################
 
 
-# DRIVER CODE 1 ############################################
 def initialize_game():
     win.blit(bg, (0, 0))
     global image, tries, secret_word, category, letter_buttons, secret_word_buttons, score, correct_letters_guessed, temp_Score
@@ -161,10 +154,8 @@ def initialize_game():
     display_secret_word(secret_word)
     category_button.update_text(category)
     welcome_player.update_text("welcome, "+str(name))
-# DRIVER CODE 1 END ############################################
 
 
-# GUI  ############################################
 def redraw_game_window():
     # puts the content on the screen.
     pygame.display.flip()  # updates the display
@@ -186,7 +177,6 @@ def redraw_game_window():
     category_button.draw(win)
     win.blit(image, (400, 155))
     welcome_player.draw(win)
-# GUI END ############################################
 
 
 def close_game():
