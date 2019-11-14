@@ -12,6 +12,7 @@ hangman_images = {"lose": pygame.image.load("assets/lose.png"), "won": pygame.im
 bg = pygame.image.load("assets/bg.png")
 
 
+
 def is_internet_connected():
     # returns the availability of active internet connection
     try:
@@ -345,7 +346,6 @@ def start_menu():
                         letter = button_values[letter_buttons.index(button) + 1]
                         name += letter
             redraw_window()
-
 
 # assigning each image to tries value so that right image can be displayed.
 button_values = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l',
