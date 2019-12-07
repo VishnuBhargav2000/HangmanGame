@@ -8,6 +8,7 @@ store the high scores.
 
 Requirements
 ------------
+pygame is required to run this game. to install pygame, run the following command
 ```bash
 pip install  pygame
 ```
